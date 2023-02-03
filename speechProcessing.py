@@ -13,7 +13,7 @@ def say(text):
 def recognizeLanguage():
     with speech_recognition.Microphone() as micro:
         print("Bitte jetzt sprechen...")
-        recording = recognizer.record(micro, duration=10)
+        recording = recognizer.record(micro, duration=5)
         print("...")
         try:
             text = recognizer.recognize_google(recording, language="de-DE")
