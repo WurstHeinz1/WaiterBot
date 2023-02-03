@@ -19,7 +19,7 @@ def start():
 
     #direct order
     elif languageProcessing.checkIntent(intent, menu, 1):
-        directOrder(intent)
+        order(intent)
 
     elif languageProcessing.checkIntent(intent, ["bestellen", "bestellung"], 1):
         order()
@@ -48,9 +48,10 @@ def showMenu():
         unknownIntent()
 
 
-def order():
-    speechProcessing.say("Was möchten sie gerne bestellen?")
-    intent = speechProcessing.recognizeLanguage()
+def order(intent = " "):
+    if intent == " ":
+        speechProcessing.say("Was möchten sie gerne bestellen?")
+        intent = speechProcessing.recognizeLanguage()
 
     wishes = languageProcessing.analyzeIntent(intent, menu + menuWords, 1)
 
@@ -88,41 +89,6 @@ def order():
     else:
         unknownIntent()
 
-def directOrder(intent):
-    wishes = languageProcessing.analyzeIntent(intent, menu + menuWords, 1)
-
-    for element in wishes:
-        for menuWord in menuWords:
-            if element == menuWord:
-                showMenu()
-                break
-
-    if wishes != []:
-        orderConfirmationText = "Verstanden. Sie möchten also "
-        for wish in range(len(wishes)):
-            if len(wishes) != 1:
-                if wish > len(wishes)-2:
-                    orderConfirmationText += "und "
-                    orderConfirmationText += wishes[wish]
-                else:
-                    orderConfirmationText += (wishes[wish] + ", ")
-            else:
-                orderConfirmationText += wishes[wish]
-        orderConfirmationText += " bestellen?"
-        print(orderConfirmationText)
-        speechProcessing.say(orderConfirmationText)
-
-        confirmation = speechProcessing.recognizeLanguage()
-        if languageProcessing.checkIntent(confirmation, negativeAnswers, 1):
-            speechProcessing.say("In Ordnung.")
-            order()
-        elif languageProcessing.checkIntent(confirmation, positiveAnswers, 1):
-            speechProcessing.say("Danke für ihre Bestellung!")
-        else:
-            unknownIntent()
-
-    else:
-        unknownIntent()
 
 def unknownIntent():
     speechProcessing.say(answerUnknownIntent[random.randint(0, len(answerUnknownIntent)-1)])
